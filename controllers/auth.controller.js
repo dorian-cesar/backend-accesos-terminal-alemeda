@@ -111,7 +111,10 @@ export const mostrarLogin = (req, res) => {
                     if (response.ok) {
                         // Guardar token en localStorage
                         localStorage.setItem('token', data.token);
+                        // Guardar datos del usuario en localStorage
+                        localStorage.setItem('usuario', JSON.stringify(data.usuario));
                         console.log('Token guardado:', data.token);
+                        console.log('Usuario guardado:', data.usuario);
                         
                         // Redirigir al dashboard CON el token en la URL
                         window.location.href = '/api/dashboard?token=' + data.token;
@@ -142,8 +145,6 @@ export const login = async (req, res) => {
   const { correo, password } = req.body;
 
   try {
-    console.log('Intento de login para:', correo);
-    console.log('Password recibido:', password);
 
     const usuario = await obtenerUsuarioPorCorreo(correo);
     if (!usuario) {
@@ -165,7 +166,19 @@ export const login = async (req, res) => {
       { expiresIn: "8h" }
     );
 
-    res.json({ mensaje: "Inicio de sesión exitoso", token });
+    // Crear objeto de usuario sin la contraseña
+    const usuarioSinPassword = {
+      id: usuario.id,
+      nombre: usuario.nombre,
+      correo: usuario.correo,
+      rol: usuario.rol
+    };
+
+    res.json({ 
+      mensaje: "Inicio de sesión exitoso", 
+      token,
+      usuario: usuarioSinPassword
+    });
   } catch (err) {
     console.error('Error en login:', err);
     res.status(500).json({ mensaje: "Error interno", error: err.message });
@@ -208,9 +221,10 @@ export const logout = (req, res) => {
         </div>
 
         <script>
-            // Eliminar token del localStorage
+            // Eliminar token y datos del usuario del localStorage
             localStorage.removeItem('token');
-            console.log('Token eliminado del localStorage');
+            localStorage.removeItem('usuario');
+            console.log('Datos de sesión eliminados del localStorage');
             
             // Redirigir al login después de 2 segundos
             setTimeout(() => {
