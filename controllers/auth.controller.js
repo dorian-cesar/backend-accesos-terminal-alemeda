@@ -16,7 +16,62 @@ export const mostrarLogin = (req, res) => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Accesos Terminal Alameda</title>
         <style>
-            /* Tus estilos aquí */
+            body { 
+                font-family: Arial, sans-serif; 
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                height: 100vh; 
+                display: flex; 
+                justify-content: center; 
+                align-items: center; 
+                margin: 0;
+            }
+            .login-container { 
+                background: white; 
+                padding: 40px; 
+                border-radius: 10px; 
+                box-shadow: 0 10px 25px rgba(0,0,0,0.2); 
+                width: 100%; 
+                max-width: 400px;
+            }
+            .login-container h2 { 
+                text-align: center; 
+                margin-bottom: 30px; 
+                color: #333;
+            }
+            .form-group { 
+                margin-bottom: 20px;
+            }
+            .form-group label { 
+                display: block; 
+                margin-bottom: 5px; 
+                color: #555;
+            }
+            .form-group input { 
+                width: 100%; 
+                padding: 12px; 
+                border: 1px solid #ddd; 
+                border-radius: 5px; 
+                box-sizing: border-box;
+            }
+            .btn-login { 
+                width: 100%; 
+                padding: 12px; 
+                background: #667eea; 
+                color: white; 
+                border: none; 
+                border-radius: 5px; 
+                cursor: pointer; 
+                font-size: 16px;
+            }
+            .btn-login:hover { 
+                background: #5a6fd8;
+            }
+            .error-message { 
+                color: #dc3545; 
+                text-align: center; 
+                margin-top: 15px; 
+                display: none;
+            }
         </style>
     </head>
     <body>
