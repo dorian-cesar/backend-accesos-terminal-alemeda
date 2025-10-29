@@ -6,6 +6,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const mostrarLogin = (req, res) => {
+  const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+  
   res.send(`
     <!DOCTYPE html>
     <html lang="es">
@@ -14,62 +16,7 @@ export const mostrarLogin = (req, res) => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Accesos Terminal Alameda</title>
         <style>
-            body { 
-                font-family: Arial, sans-serif; 
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                height: 100vh; 
-                display: flex; 
-                justify-content: center; 
-                align-items: center; 
-                margin: 0;
-            }
-            .login-container { 
-                background: white; 
-                padding: 40px; 
-                border-radius: 10px; 
-                box-shadow: 0 10px 25px rgba(0,0,0,0.2); 
-                width: 100%; 
-                max-width: 400px;
-            }
-            .login-container h2 { 
-                text-align: center; 
-                margin-bottom: 30px; 
-                color: #333;
-            }
-            .form-group { 
-                margin-bottom: 20px;
-            }
-            .form-group label { 
-                display: block; 
-                margin-bottom: 5px; 
-                color: #555;
-            }
-            .form-group input { 
-                width: 100%; 
-                padding: 12px; 
-                border: 1px solid #ddd; 
-                border-radius: 5px; 
-                box-sizing: border-box;
-            }
-            .btn-login { 
-                width: 100%; 
-                padding: 12px; 
-                background: #667eea; 
-                color: white; 
-                border: none; 
-                border-radius: 5px; 
-                cursor: pointer; 
-                font-size: 16px;
-            }
-            .btn-login:hover { 
-                background: #5a6fd8;
-            }
-            .error-message { 
-                color: #dc3545; 
-                text-align: center; 
-                margin-top: 15px; 
-                display: none;
-            }
+            /* Tus estilos aquí */
         </style>
     </head>
     <body>
@@ -90,6 +37,8 @@ export const mostrarLogin = (req, res) => {
         </div>
 
         <script>
+            const BASE_URL = '${baseUrl}';
+            
             document.getElementById('loginForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 
@@ -98,7 +47,7 @@ export const mostrarLogin = (req, res) => {
                 const errorMessage = document.getElementById('errorMessage');
                 
                 try {
-                    const response = await fetch('/api/auth/login', {
+                    const response = await fetch(BASE_URL + '/api/auth/login', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -109,15 +58,12 @@ export const mostrarLogin = (req, res) => {
                     const data = await response.json();
                     
                     if (response.ok) {
-                        // Guardar token en localStorage
                         localStorage.setItem('token', data.token);
-                        // Guardar datos del usuario en localStorage
                         localStorage.setItem('usuario', JSON.stringify(data.usuario));
                         console.log('Token guardado:', data.token);
-                        console.log('Usuario guardado:', data.usuario);
                         
-                        // Redirigir al dashboard CON el token en la URL
-                        window.location.href = '/api/dashboard?token=' + data.token;
+                        // Usar BASE_URL para la redirección
+                        window.location.href = BASE_URL + '/api/dashboard?token=' + data.token;
                     } else {
                         errorMessage.textContent = data.mensaje || 'Error en el login';
                         errorMessage.style.display = 'block';
@@ -128,11 +74,10 @@ export const mostrarLogin = (req, res) => {
                 }
             });
 
-            // Verificar si ya está logueado
             window.addEventListener('load', () => {
                 const token = localStorage.getItem('token');
                 if (token) {
-                    window.location.href = '/api/dashboard?token=' + token;
+                    window.location.href = BASE_URL + '/api/dashboard?token=' + token;
                 }
             });
         </script>

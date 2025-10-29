@@ -29,16 +29,26 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        connectSrc: ["'self'", "ws://localhost:3000"],
+        connectSrc: ["'self'", "ws://localhost:3000", "https://andenes-alameda.dev-wit.com"],
         scriptSrc: ["'self'", "'unsafe-inline'"],
-        scriptSrcAttr: ["'unsafe-inline'"], // ← PERMITE EVENT HANDLERS INLINE
+        scriptSrcAttr: ["'unsafe-inline'"],
         styleSrc: ["'self'", "'unsafe-inline'"],
       },
     },
   })
 );
 
-app.use(cors());
+// Configurar CORS para acceso externo
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:5173', // Si usas Vite
+    'https://andenes-alameda.dev-wit.com',
+    'https://www.andenes-alameda.dev-wit.com'
+  ],
+  credentials: true
+}));
+
 app.use(express.json());
 app.use(morgan("dev"));
 
@@ -66,6 +76,15 @@ app.use("/api/dashboard", dashboardRoutes);
 // --------------------
 app.get("/", (req, res) => {
   res.redirect("/api/auth/login");
+});
+
+// Health check para la VM
+app.get("/health", (req, res) => {
+  res.status(200).json({ 
+    status: "OK", 
+    message: "Servidor funcionando correctamente",
+    timestamp: new Date().toISOString()
+  });
 });
 
 // Manejo de rutas no encontradas (404)
