@@ -186,7 +186,8 @@ export const login = async (req, res) => {
 };
 
 export const logout = (req, res) => {
-  // Enviar página HTML que elimina el token y redirige
+  const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+  
   res.send(`
     <!DOCTYPE html>
     <html lang="es">
@@ -221,6 +222,8 @@ export const logout = (req, res) => {
         </div>
 
         <script>
+            const BASE_URL = '${baseUrl}';
+            
             // Eliminar token y datos del usuario del localStorage
             localStorage.removeItem('token');
             localStorage.removeItem('usuario');
@@ -228,7 +231,7 @@ export const logout = (req, res) => {
             
             // Redirigir al login después de 2 segundos
             setTimeout(() => {
-                window.location.href = '/api/auth/login';
+                window.location.href = BASE_URL + '/api/auth/login';
             }, 2000);
         </script>
     </body>
