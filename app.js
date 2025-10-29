@@ -40,12 +40,24 @@ app.use(
 
 // Configurar CORS para acceso externo
 app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'http://localhost:5173', // Si usas Vite
-    'https://andenes-alameda.dev-wit.com',
-    'https://www.andenes-alameda.dev-wit.com'
-  ],
+  origin: function (origin, callback) {
+    // En desarrollo, permitir localhost y el dominio de producción
+    const allowedOrigins = [
+      'http://localhost:3000',
+      'http://localhost:5173',
+      'https://andenes-alameda.dev-wit.com',
+      'https://www.andenes-alameda.dev-wit.com'
+    ];
+    
+    // Permitir requests sin origin (como curl o postman)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('No permitido por CORS'));
+    }
+  },
   credentials: true
 }));
 
