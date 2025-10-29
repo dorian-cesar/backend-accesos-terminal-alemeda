@@ -5,7 +5,6 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-// FUNCIÓN QUE FALTA - agregar esto al archivo
 export const mostrarLogin = (req, res) => {
   res.send(`
     <!DOCTYPE html>
@@ -13,7 +12,7 @@ export const mostrarLogin = (req, res) => {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Login - Dashboard</title>
+        <title>Accesos Terminal Alameda</title>
         <style>
             body { 
                 font-family: Arial, sans-serif; 
@@ -112,8 +111,10 @@ export const mostrarLogin = (req, res) => {
                     if (response.ok) {
                         // Guardar token en localStorage
                         localStorage.setItem('token', data.token);
-                        // Redirigir al dashboard
-                        window.location.href = '/api/dashboard';
+                        console.log('Token guardado:', data.token);
+                        
+                        // Redirigir al dashboard CON el token en la URL
+                        window.location.href = '/api/dashboard?token=' + data.token;
                     } else {
                         errorMessage.textContent = data.mensaje || 'Error en el login';
                         errorMessage.style.display = 'block';
@@ -121,6 +122,14 @@ export const mostrarLogin = (req, res) => {
                 } catch (error) {
                     errorMessage.textContent = 'Error de conexión';
                     errorMessage.style.display = 'block';
+                }
+            });
+
+            // Verificar si ya está logueado
+            window.addEventListener('load', () => {
+                const token = localStorage.getItem('token');
+                if (token) {
+                    window.location.href = '/api/dashboard?token=' + token;
                 }
             });
         </script>
@@ -141,9 +150,6 @@ export const login = async (req, res) => {
       console.log('Usuario no encontrado');
       return res.status(404).json({ mensaje: "Usuario no encontrado" });
     }
-
-    console.log('Usuario encontrado:', usuario.correo);
-    console.log('Password en DB:', usuario.password);
 
     const passwordValido = await bcrypt.compare(password, usuario.password);
     console.log('Resultado de bcrypt.compare:', passwordValido);
@@ -167,6 +173,59 @@ export const login = async (req, res) => {
 };
 
 export const logout = (req, res) => {
-  // En una aplicación real, podrías invalidar el token aquí
-  res.json({ mensaje: "Sesión cerrada correctamente" });
+  // Enviar página HTML que elimina el token y redirige
+  res.send(`
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Cerrando sesión - Terminal Alameda</title>
+        <style>
+            body { 
+                font-family: Arial, sans-serif; 
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                height: 100vh; 
+                display: flex; 
+                justify-content: center; 
+                align-items: center; 
+                margin: 0;
+                color: white;
+                text-align: center;
+            }
+            .logout-container {
+                background: rgba(255, 255, 255, 0.1);
+                padding: 40px;
+                border-radius: 10px;
+                backdrop-filter: blur(10px);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="logout-container">
+            <h1>Cerrando sesión...</h1>
+            <p>Serás redirigido al login en unos segundos.</p>
+        </div>
+
+        <script>
+            // Eliminar token del localStorage
+            localStorage.removeItem('token');
+            console.log('Token eliminado del localStorage');
+            
+            // Redirigir al login después de 2 segundos
+            setTimeout(() => {
+                window.location.href = '/api/auth/login';
+            }, 2000);
+        </script>
+    </body>
+    </html>
+  `);
+};
+
+// Nueva función para logout via API (para llamadas fetch)
+export const logoutAPI = (req, res) => {
+  res.json({ 
+    mensaje: "Sesión cerrada correctamente",
+    redirect: "/api/auth/login"
+  });
 };

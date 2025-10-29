@@ -13,7 +13,6 @@ const __dirname = path.dirname(__filename);
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import dashboardRoutes from "./routes/dashboard.routes.js";
-import publicRoutes from "./routes/public.routes.js";
 
 dotenv.config();
 
@@ -31,7 +30,8 @@ app.use(
       directives: {
         defaultSrc: ["'self'"],
         connectSrc: ["'self'", "ws://localhost:3000"],
-        scriptSrc: ["'self'", "'unsafe-inline'"], // Permite scripts inline
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        scriptSrcAttr: ["'unsafe-inline'"], // ← PERMITE EVENT HANDLERS INLINE
         styleSrc: ["'self'", "'unsafe-inline'"],
       },
     },
@@ -53,7 +53,6 @@ app.get('/favicon.ico', (req, res) => {
 // --------------------
 // Rutas públicas
 // --------------------
-app.use("/api/public", publicRoutes); // Cambiado para consistencia
 app.use("/api/auth", authRoutes);
 
 // --------------------

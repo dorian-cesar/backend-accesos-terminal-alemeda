@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS accesos_alameda CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE accesos_alameda;
+CREATE DATABASE IF NOT EXISTS andenes_alameda CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE andenes_alameda;
 
 CREATE TABLE usuarios (
   id INT AUTO_INCREMENT PRIMARY KEY,
