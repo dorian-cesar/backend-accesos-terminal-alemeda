@@ -34,10 +34,10 @@
       ]
     },
     {
-      "name": "👥 Gestión de Usuarios",
+      "name": "🏢 Gestión de Empresas (Simplificada)",
       "item": [
         {
-          "name": "1. Crear Usuario de Prueba - POST /api/users",
+          "name": "1. Crear Empresa - POST /api/empresas",
           "request": {
             "method": "POST",
             "header": [
@@ -52,7 +52,262 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nombre\": \"Usuario de Prueba\",\n  \"correo\": \"prueba@correo.com\",\n  \"password\": \"123456\",\n  \"rol\": \"operador\"\n}"
+              "raw": "{\n  \"nombre\": \"Empresa Ejemplo S.A.\",\n  \"rut\": \"76.123.456-7\",\n  \"direccion\": \"Av. Principal 123, Santiago\",\n  \"telefono\": \"+56 2 2345 6789\",\n  \"contacto\": \"contacto@empresaejemplo.cl\",\n  \"estado\": \"activa\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/empresas",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "empresas"]
+            }
+          }
+        },
+        {
+          "name": "2. Listar Empresas Activas - GET /api/empresas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/empresas",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "empresas"]
+            }
+          }
+        },
+        {
+          "name": "3. Listar Todas las Empresas - GET /api/empresas?incluirInactivas=true",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/empresas?incluirInactivas=true",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "empresas"],
+              "query": [
+                {
+                  "key": "incluirInactivas",
+                  "value": "true"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "4. Obtener Empresa por ID - GET /api/empresas/:id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/empresas/{{EMPRESA_ID}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "empresas", "{{EMPRESA_ID}}"]
+            }
+          }
+        },
+        {
+          "name": "5. Obtener Empresa Incluyendo Inactivas - GET /api/empresas/:id?incluirInactivas=true",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/empresas/{{EMPRESA_ID}}?incluirInactivas=true",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "empresas", "{{EMPRESA_ID}}"],
+              "query": [
+                {
+                  "key": "incluirInactivas",
+                  "value": "true"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "6. Actualizar Empresa - PUT /api/empresas/:id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Empresa Ejemplo Actualizada S.A.\",\n  \"direccion\": \"Av. Actualizada 456, Santiago\",\n  \"telefono\": \"+56 2 2345 6790\",\n  \"contacto\": \"nuevo_contacto@empresaejemplo.cl\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/empresas/{{EMPRESA_ID}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "empresas", "{{EMPRESA_ID}}"]
+            }
+          }
+        },
+        {
+          "name": "7. Actualizar Empresa con Estado - PUT /api/empresas/:id (con estado)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Empresa Reactivada S.A.\",\n  \"estado\": \"activa\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/empresas/{{EMPRESA_ID}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "empresas", "{{EMPRESA_ID}}"]
+            }
+          }
+        },
+        {
+          "name": "8. Cambiar Estado Empresa - PATCH /api/empresas/:id/estado",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"inactiva\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/empresas/{{EMPRESA_ID}}/estado",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "empresas", "{{EMPRESA_ID}}", "estado"]
+            }
+          }
+        },
+        {
+          "name": "9. Activar Empresa - PATCH /api/empresas/:id/activar",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/empresas/{{EMPRESA_ID}}/activar",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "empresas", "{{EMPRESA_ID}}", "activar"]
+            }
+          }
+        },
+        {
+          "name": "10. Desactivar Empresa - PATCH /api/empresas/:id/desactivar",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/empresas/{{EMPRESA_ID}}/desactivar",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "empresas", "{{EMPRESA_ID}}", "desactivar"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "👥 Gestión de Usuarios",
+      "item": [
+        {
+          "name": "1. Crear Usuario - POST /api/users",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Usuario de Prueba\",\n  \"correo\": \"prueba@correo.com\",\n  \"password\": \"123456\",\n  \"rol\": \"operador\",\n  \"empresa_id\": 1\n}"
             },
             "url": {
               "raw": "http://localhost:3000/api/users",
@@ -117,7 +372,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nombre\": \"Usuario Actualizado\",\n  \"correo\": \"actualizado@correo.com\",\n  \"rol\": \"administrador\"\n}"
+              "raw": "{\n  \"nombre\": \"Usuario Actualizado\",\n  \"correo\": \"actualizado@correo.com\",\n  \"rol\": \"administrador\",\n  \"empresa_id\": 1\n}"
             },
             "url": {
               "raw": "http://localhost:3000/api/users/{{USER_ID}}",
@@ -212,6 +467,157 @@
       ]
     },
     {
+      "name": "🚌 Gestión de Buses",
+      "item": [
+        {
+          "name": "1. Crear Bus - POST /api/buses",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patente\": \"AB123CD\",\n  \"tag_uhf\": \"TAG001\",\n  \"marca\": \"Mercedes\",\n  \"modelo\": \"Benz O500U\",\n  \"capacidad\": 45,\n  \"empresa_id\": 1,\n  \"estado\": \"activo\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/buses",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "buses"]
+            }
+          }
+        },
+        {
+          "name": "2. Listar Buses - GET /api/buses",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/buses",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "buses"]
+            }
+          }
+        },
+        {
+          "name": "3. Obtener Bus por ID - GET /api/buses/:id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/buses/{{BUS_ID}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "buses", "{{BUS_ID}}"]
+            }
+          }
+        },
+        {
+          "name": "4. Actualizar Bus - PUT /api/buses/:id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"marca\": \"Mercedes Benz\",\n  \"modelo\": \"O500U Actualizado\",\n  \"capacidad\": 50\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/buses/{{BUS_ID}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "buses", "{{BUS_ID}}"]
+            }
+          }
+        },
+        {
+          "name": "5. Desactivar Bus - PATCH /api/buses/:id/estado",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"inactivo\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/buses/{{BUS_ID}}/estado",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "buses", "{{BUS_ID}}", "estado"]
+            }
+          }
+        },
+        {
+          "name": "6. Activar Bus - PATCH /api/buses/:id/estado",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"activo\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/buses/{{BUS_ID}}/estado",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "buses", "{{BUS_ID}}", "estado"]
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "📊 Dashboard - GET /api/dashboard",
       "request": {
         "method": "GET",
@@ -241,8 +647,12 @@
       "value": "2"
     },
     {
-      "key": "BASE_URL",
-      "value": "http://localhost:3000"
+      "key": "EMPRESA_ID",
+      "value": "1"
+    },
+    {
+      "key": "BUS_ID",
+      "value": "1"
     }
   ],
   "event": [
@@ -262,6 +672,12 @@
         "exec": [
           "pm.test(\"Status code is 200\", function () {",
           "    pm.response.to.have.status(200);",
+          "});",
+          "",
+          "// Test para respuestas exitosas",
+          "pm.test(\"Respuesta exitosa\", function () {",
+          "    const responseData = pm.response.json();",
+          "    pm.expect(responseData.success).to.be.true;",
           "});"
         ]
       }

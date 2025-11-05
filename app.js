@@ -12,6 +12,8 @@ const __dirname = path.dirname(__filename);
 
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
+import empresaRoutes from './routes/empresa.routes.js';
+import busRoutes from './routes/bus.routes.js';
 import dashboardRoutes from "./routes/dashboard.routes.js";
 
 dotenv.config();
@@ -82,6 +84,8 @@ app.use("/api/auth", authRoutes);
 // --------------------
 app.use("/api/users", userRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/empresas", empresaRoutes);
+app.use("/api/buses", busRoutes);
 
 // --------------------
 // Ruta raíz y manejo de errores
