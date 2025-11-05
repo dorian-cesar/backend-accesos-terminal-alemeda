@@ -8,7 +8,7 @@ export const crearUsuario = async (usuario) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const [result] = await pool.query(
-    "INSERT INTO usuarios (nombre, correo, password, rol) VALUES (?, ?, ?, ?)",
+    "INSERT INTO usuarios (nombre, correo, password, rol, estado) VALUES (?, ?, ?, ?, 'activo')",
     [nombre, correo, hashedPassword, rol]
   );
 
@@ -17,14 +17,14 @@ export const crearUsuario = async (usuario) => {
 
 export const obtenerUsuarios = async () => {
   const [rows] = await pool.query(
-    "SELECT id, nombre, correo, rol, creado_en FROM usuarios"
+    "SELECT id, nombre, correo, rol, estado, creado_en FROM usuarios WHERE estado != 'eliminado'"
   );
   return rows;
 };
 
 export const obtenerUsuarioPorCorreo = async (correo) => {
   const [rows] = await pool.query(
-    "SELECT * FROM usuarios WHERE correo = ?",
+    "SELECT * FROM usuarios WHERE correo = ? AND estado != 'eliminado'",
     [correo]
   );
   return rows[0];
@@ -32,20 +32,35 @@ export const obtenerUsuarioPorCorreo = async (correo) => {
 
 export const obtenerUsuarioPorId = async (id) => {
   const [rows] = await pool.query(
-    "SELECT id, nombre, correo, rol, creado_en FROM usuarios WHERE id = ?",
+    "SELECT id, nombre, correo, rol, estado, creado_en FROM usuarios WHERE id = ? AND estado != 'eliminado'",
     [id]
   );
   return rows[0];
 };
 
-export const actualizarUsuario = async (id, datosActualizados) => {
-  const { nombre, correo, rol } = datosActualizados;
+export const actualizarUsuario = async (id, camposActualizados) => {
+  const camposPermitidos = ['nombre', 'correo', 'rol', 'estado'];
+  const camposParaActualizar = [];
+  const valores = [];
   
-  const [result] = await pool.query(
-    "UPDATE usuarios SET nombre = ?, correo = ?, rol = ? WHERE id = ?",
-    [nombre, correo, rol, id]
-  );
+  // Construir dinámicamente la consulta UPDATE
+  for (const [campo, valor] of Object.entries(camposActualizados)) {
+    if (camposPermitidos.includes(campo) && valor !== undefined) {
+      camposParaActualizar.push(`${campo} = ?`);
+      valores.push(valor);
+    }
+  }
   
+  // Si no hay campos para actualizar, retornar false
+  if (camposParaActualizar.length === 0) {
+    return false;
+  }
+  
+  valores.push(id);
+  
+  const query = `UPDATE usuarios SET ${camposParaActualizar.join(', ')} WHERE id = ?`;
+  
+  const [result] = await pool.query(query, valores);
   return result.affectedRows > 0;
 };
 
@@ -60,27 +75,11 @@ export const actualizarPasswordUsuario = async (id, nuevaPassword) => {
   return result.affectedRows > 0;
 };
 
-export const actualizarUsuarioCompleto = async (id, datosActualizados) => {
-  const { nombre, correo, password, rol } = datosActualizados;
+export const cambiarEstadoUsuario = async (id, nuevoEstado) => {
+  const [result] = await pool.query(
+    "UPDATE usuarios SET estado = ? WHERE id = ?",
+    [nuevoEstado, id]
+  );
   
-  let query = "UPDATE usuarios SET nombre = ?, correo = ?, rol = ?";
-  let params = [nombre, correo, rol];
-  
-  // Si se proporciona una nueva password, incluirla en la actualización
-  if (password) {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    query += ", password = ?";
-    params.push(hashedPassword);
-  }
-  
-  query += " WHERE id = ?";
-  params.push(id);
-  
-  const [result] = await pool.query(query, params);
-  return result.affectedRows > 0;
-};
-
-export const eliminarUsuario = async (id) => {
-  const [result] = await pool.query("DELETE FROM usuarios WHERE id = ?", [id]);
   return result.affectedRows > 0;
 };

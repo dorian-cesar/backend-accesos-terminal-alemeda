@@ -7,14 +7,16 @@ CREATE TABLE usuarios (
   correo VARCHAR(100) UNIQUE NOT NULL,
   password VARCHAR(255) NOT NULL,
   rol ENUM('operador','administrador','superusuario') DEFAULT 'operador',
+  estado ENUM('activo','inactivo') DEFAULT 'activo',
   creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Insertar superusuario con password 'wit123' encriptada con bcrypt
-INSERT INTO usuarios (nombre, correo, password, rol)
+INSERT INTO usuarios (nombre, correo, password, rol, estado)
 VALUES (
   'Super Usuario',
   'super@usuario.cl',
   '$2b$10$XVDPaUQO.9GwlxDT/2wLbOysBVEWyAs.gvUNA/q5yAiGsdFZrJdu2',
-  'superusuario'
+  'superusuario',
+  'activo'
 );
