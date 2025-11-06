@@ -48,7 +48,8 @@ app.use(cors({
       'http://localhost:3000',
       'http://localhost:5173',
       'https://andenes-alameda.dev-wit.com',
-      'https://www.andenes-alameda.dev-wit.com'
+      'https://www.andenes-alameda.dev-wit.com',
+      'https://mantenedor-andenes.netlify.app'
     ];
     
     // Permitir requests sin origin (como curl o postman)

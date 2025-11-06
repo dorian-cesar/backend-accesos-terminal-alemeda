@@ -34,7 +34,7 @@
       ]
     },
     {
-      "name": "🏢 Gestión de Empresas (Simplificada)",
+      "name": "🏢 Gestión de Empresas",
       "item": [
         {
           "name": "1. Crear Empresa - POST /api/empresas",
